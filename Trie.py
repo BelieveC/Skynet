@@ -7,7 +7,7 @@ MyStruct = recordtype("MyStruct", "ip branches leaf parent words depth")
 
 #mongo still needed
 
-mast_ip = '172.20.52.8'
+mast_ip = '192.168.1.103'
 
 class Trie :
 	def __init__(self) :

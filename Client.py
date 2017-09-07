@@ -2,8 +2,8 @@ import socket
 from ftplib import FTP
 import IP
 
-mast_port = 5011
-serv_port = 5012
+mast_port = 6898
+serv_port = 6893
 
 
 class Client():

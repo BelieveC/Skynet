@@ -18,7 +18,7 @@ from random import randint
 BUFFER = 4096
 
 persist_port = 9996        # set port where persistence is listening
-persist_ip =  '172.20.52.8'             # set ip of persistence
+persist_ip =  '192.168.1.103'             # set ip of persistence
 
 
 def slave_thread(bundle):

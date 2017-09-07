@@ -6,7 +6,7 @@ import IP
 import hashlib
 
 persist_port = 9996                     # set port where persistence is listening
-persist_ip = '172.20.52.8'              # set ip of persistence
+persist_ip = '192.168.1.103'              # set ip of persistence
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-u', '--upload', type=str, help='Upload the specifired file')
@@ -28,7 +28,7 @@ def connect_to_persistence(message):
     port = persist_port
 
     s.connect((host, port))
-    print "connected to persis"
+    print "connected to persist"
 
     s.send(message)
 

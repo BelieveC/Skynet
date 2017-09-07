@@ -20,9 +20,9 @@ import threading
 import FileServer
 
 persist_port = 9996                   # set port where persistence is listening
-persist_ip = '172.20.52.8'             # set ip of persistence
-master_ip1 = '172.20.52.8'              # set ip of master
-files_path = '/home/placements2018/Music'
+persist_ip = '192.168.1.103'             # set ip of persistence
+master_ip1 = '192.168.1.103'              # set ip of master
+files_path = '/home/chaitanya/Music'
 
 
 char_to_int = {'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'a':10,'b':11,'c':12,'d':13,'e':14,'f':15,'g':16}
