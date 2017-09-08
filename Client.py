@@ -1,9 +1,10 @@
 import socket
 from ftplib import FTP
 import IP
+import variables
 
-mast_port = 6898
-serv_port = 6893
+mast_port = variables.master_port
+serv_port = variables.server_port
 
 
 class Client():

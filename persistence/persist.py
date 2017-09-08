@@ -1,10 +1,12 @@
+import sys
+sys.path.append("../")
 import socket
 from Storage import Storage
 import sqlite3 as db
 import IP
 import hashlib      # library for sha1 hashing
-
-curr_port = 9996
+import variables
+curr_port = variables.persistence_port
 
 def start_listening():
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

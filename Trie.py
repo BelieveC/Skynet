@@ -2,12 +2,12 @@ import os
 import sys
 from recordtype import recordtype
 #would require a nltk library at this place
-
+import variables
 MyStruct = recordtype("MyStruct", "ip branches leaf parent words depth")
 
 #mongo still needed
 
-mast_ip = '192.168.1.103'
+mast_ip = variables.master_port
 
 class Trie :
 	def __init__(self) :

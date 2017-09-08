@@ -4,9 +4,10 @@ from Client import Client
 import socket
 import IP
 import hashlib
+import variables
 
-persist_port = 9996                     # set port where persistence is listening
-persist_ip = '192.168.1.103'              # set ip of persistence
+persist_port = variables.persistence_port                     # set port where persistence is listening
+persist_ip = variables.persistence_ip              # set ip of persistence
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-u', '--upload', type=str, help='Upload the specifired file')

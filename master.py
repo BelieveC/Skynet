@@ -1,7 +1,5 @@
 import math
 import socket, select, string, sys
-sys.path.insert(0, '../Find_IP/')
-sys.path.insert(0, '../Trie/')
 import netifaces as ni
 import socket                   # Import socket module
 import IP                       # module to calculate system IP
@@ -10,7 +8,6 @@ import master_8
 from thread import *
 from threading import Thread
 import port_mapper
-import Find_IP
 import Trie
 import FileServer
 BUFFER = 4096

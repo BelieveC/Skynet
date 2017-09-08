@@ -1,8 +1,6 @@
 import math
 import traceback
 import socket, select, string, sys
-sys.path.insert(0, '../Find_IP/')
-sys.path.insert(0, '../Trie/')
 import netifaces as ni
 from random import randint
 from thread import *
@@ -10,15 +8,14 @@ from threading import Thread
 import port_mapper
 import socket                   # Import socket module
 import IP                       # module to calculate system IP
-import Find_IP
 import Trie
 import json
 from random import randint
-
+import variables
 BUFFER = 4096
 
-persist_port = 9996        # set port where persistence is listening
-persist_ip =  '192.168.1.103'             # set ip of persistence
+persist_port = variables.persistence_port        # set port where persistence is listening
+persist_ip =  variables.persistence_ip             # set ip of persistence
 
 
 def slave_thread(bundle):

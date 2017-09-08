@@ -1,7 +1,5 @@
 import math
 import socket, select, string, sys
-sys.path.insert(0, '../Find_IP/')
-sys.path.insert(0, '../Trie/')
 import netifaces as ni
 import socket                   # Import socket module
 import IP                       # module to calculate system IP
@@ -10,7 +8,6 @@ import master_8
 from thread import *
 from threading import Thread
 import port_mapper
-import Find_IP
 import hashlib
 import Trie
 import difflib
@@ -18,12 +15,12 @@ import bisect
 import Queue
 import threading
 import FileServer
+import variables
 
-persist_port = 9996                   # set port where persistence is listening
-persist_ip = '192.168.1.103'             # set ip of persistence
-master_ip1 = '192.168.1.103'              # set ip of master
-files_path = '/home/chaitanya/Music'
-
+persist_port = variables.persistence_port               # set port where persistence is listening
+persist_ip = variables.persistence_ip             # set ip of persistence
+master_ip1 = variables.master_ip             # set ip of master
+files_path = variables.storage_path
 
 char_to_int = {'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'a':10,'b':11,'c':12,'d':13,'e':14,'f':15,'g':16}
 
