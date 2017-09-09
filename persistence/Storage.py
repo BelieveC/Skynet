@@ -4,6 +4,9 @@ import random
 import os
 import hashlib
 import ipaddress
+from cachetools import LRUCache
+
+CACHE = LRUCache(maxsize=10)
 
 class Storage():
 
@@ -94,7 +97,8 @@ class Storage():
 		try:
 			query = 'INSERT INTO master_servers (ip) VALUES (?)' 
 			self.cursor.execute(query, (add_ip, ))
-			self.conn.commit()                                     # to save changes
+			self.conn.commit()
+			CACHE['master'] = add_ip                                    # to save changes
 		except db.IntegrityError:
 			self.add_heartbeat(add_ip)
 
@@ -112,6 +116,12 @@ class Storage():
 
 	def get_master(self):
 		#print "getting master"
+		try:
+			if CACHE['master']:
+				return CACHE['master']
+		except:
+			print "Cache not present"
+
 		query = 'SELECT COUNT(*) FROM master_servers'                 # to get the number of rows present in table 
 		rows = self.cursor.execute(query).fetchone()[0]
 		query = 'SELECT ip from master_servers ORDER BY RANDOM() LIMIT 1'    # to get a random master from the persistence
