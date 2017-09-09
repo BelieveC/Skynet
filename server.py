@@ -203,7 +203,7 @@ def client_thread(buff):
 				filekey = data[data.rfind(':')+1:]
 				print "filekey :",filekey
 				step = 0
-				for i in range(0,min(len(self.nodeid),filekey)):
+				for i in range(0,min(len(self.nodeid), len(filekey))):
 					if(self.nodeid[i] != filekey[i]):
 						break
 					else:
@@ -476,21 +476,24 @@ class Server :
 
 		connection_type = 1
 		print "GOING TO INITIALIZE IP ADDRESSSSSSSS"
-		while True :
-			try :
-				if connection_type == 1 :
-					self.ip = ni.ifaddresses('enp1s0')[2][0]['addr']
-				else :
-					self.ip = ni.ifaddresses('eth0')[2][0]['addr']
-				if self.ip == "" :
-					continue				
-			except :
-				self.ip = ni.ifaddresses('eth0')[2][0]['addr']
-			finally :
-				break
+		# while True :
+		# 	try :
+		# 		if connection_type == 1 :
+		# 			self.ip = ni.ifaddresses('enp1s0')[2][0]['addr']
+		# 		else :
+		# 			self.ip = ni.ifaddresses('eth0')[2][0]['addr']
+		# 		if self.ip == "" :
+		# 			continue				
+		# 	except :
+		# 		self.ip = ni.ifaddresses('eth0')[2][0]['addr']
+		# 	finally :
+		# 		break
+
+		self.ip = IP.IP().get_my_ip()
 
 		self.socket_obj = {}
 
+		print "Initialized ip Address "+self.ip
 
 		#self.nodeid = "abc8960"      # dummy nodeid
 
@@ -601,7 +604,7 @@ class Server :
 		if(l==1):
 			return self.leaf[0]
 
-		if(l>1 and peer_nodeid>=self.leaf[0] and peer_nodeid<=self.leaf[l-1]):
+		if(l>1 and peer_nodeid>=self.leaf[0] and peer_nodeid<=self.leaf[l-1]):	
 			return min(self.leaf, key=lambda v: len(set(peer_nodeid) ^ set(v)))
 			#return difflib.get_close_matches(peer_nodeid, self.leaf,1)
 
