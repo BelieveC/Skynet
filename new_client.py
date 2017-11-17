@@ -1,4 +1,3 @@
-
 import argparse
 from Client import Client
 import socket
@@ -24,7 +23,7 @@ parser.add_argument(
 
 def connect_to_persistence(message):
     s = socket.socket()             # Create a socket object
-    
+
     host = persist_ip
     port = persist_port
 
@@ -46,7 +45,7 @@ print args.upload
 if args.upload:
     c = Client()
     #c.send_file_to_server(args.upload+"<key>"+'567','172.17.14.23')
-    msg = connect_to_persistence("client 2:SERVER2")  # 
+    msg = connect_to_persistence("client 2:SERVER2")  #
    # filekey = hashlib.sha1(args.upload).hexdigest()
     server = msg[:msg.rfind(':')]
     filekey = msg[msg.rfind(':')+1:]

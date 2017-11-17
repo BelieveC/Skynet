@@ -25,18 +25,18 @@ class Storage():
 
 
 	def add_new_server(self, add_ip):
-		query = 'SELECT COUNT(*) FROM peer_servers'                 # to get the number of rows present in table 
+		query = 'SELECT COUNT(*) FROM peer_servers'                 # to get the number of rows present in table
 		rows = self.cursor.execute(query).fetchone()[0]
 		#print "size :",rows
 		try:
-			query = 'INSERT INTO peer_servers (ip,load) VALUES (?,?)' 
+			query = 'INSERT INTO peer_servers (ip,load) VALUES (?,?)'
 			self.cursor.execute(query, (add_ip,0 ))
 			self.conn.commit()                                     # to save changes
 		except db.IntegrityError:
 			self.add_heartbeat(add_ip)
 
 	def if_first_server(self):
-		query = 'SELECT COUNT(*) FROM peer_servers'                 # to get the number of rows present in table 
+		query = 'SELECT COUNT(*) FROM peer_servers'                 # to get the number of rows present in table
 		rows = self.cursor.execute(query).fetchone()[0]
 		return rows
 
@@ -44,14 +44,14 @@ class Storage():
 		query = 'UPDATE peer_servers SET timestamp=? WHERE ip=?'
 		self.cursor.execute(query, (time.time(), add_ip))
 		self.conn.commit()
-     
+
 	def add_load_server(self, add_ip, load):                       # load is number of clients attached
 		query = 'UPDATE peer_servers SET load=? WHERE ip=?'
 		self.cursor.execute(query, (load, add_ip))
 		self.conn.commit()
-	
+
 	def add_id_server(self, add_ip, server_id):                       # setting server_id to every server as unique identifier
-		#query = 'SELECT COUNT(*) FROM peer_servers'                 # to get the number of rows present in table 
+		#query = 'SELECT COUNT(*) FROM peer_servers'                 # to get the number of rows present in table
 		#rows = self.cursor.execute(query).fetchone()[0]
 		query = 'UPDATE peer_servers SET server_id=? WHERE ip=?'
 		#self.cursor.execute(query, (server_id, add_ip))           # nodeid using hashlib
@@ -67,11 +67,20 @@ class Storage():
 		rows = self.cursor.execute(query).fetchall()
 		diff = 100000000000000000000000000
 		ans = ""
-		new_ip = ipaddress.IPv4Address(unicode(new_ip))
+		# new_ip = ipaddress.IPv4Address(unicode(new_ip))
+		subnet_mask = [255,255,255,0]
+		ip_arr = new_ip.split(".")
+		counter = 0
+		for mask in subnet_mask:
+			tmp = int(ip_arr[counter]) & mask
+			if tmp != int(ip_arr[counter]):
+				break
+			counter+=1
+		host_id = int(ip_arr[counter])
 		for ip in rows:
 			iip = ip[0]
-			ip = ipaddress.IPv4Address(unicode(ip[0]))
-			new_diff = abs(int(new_ip) - int(ip))
+			current_host_id = int(iip.split(".")[counter])
+			new_diff = abs(host_id - current_host_id)
 			if(diff > new_diff):
 				diff = new_diff
 				ans = iip
@@ -79,13 +88,13 @@ class Storage():
 
 	def get_server(self):
 		#print "getting master"
-		query = 'SELECT ip FROM peer_servers ORDER BY load'                 # to get the number of rows present in table 
+		query = 'SELECT ip FROM peer_servers ORDER BY load'                 # to get the number of rows present in table
 		rows = self.cursor.execute(query).fetchone()[0]
 		#print rows
 		return rows
 
 	def get_list_of_masters(self):
-		query = 'SELECT ip FROM master_servers'                 # to get the number of rows present in table 
+		query = 'SELECT ip FROM master_servers'                 # to get the number of rows present in table
 		rows = self.cursor.execute(query).fetchall()
 		new_list = ""
 		for i in rows:
@@ -95,7 +104,7 @@ class Storage():
 
 	def add_new_master(self, add_ip):
 		try:
-			query = 'INSERT INTO master_servers (ip) VALUES (?)' 
+			query = 'INSERT INTO master_servers (ip) VALUES (?)'
 			self.cursor.execute(query, (add_ip, ))
 			self.conn.commit()
 			CACHE['master'] = add_ip                                    # to save changes
@@ -108,7 +117,7 @@ class Storage():
 		self.conn.commit()
 
 	def add_id_master(self, add_ip, master_id):                       # setting master_id to every master as unique identifier
-		query = 'SELECT COUNT(*) FROM master_servers'                 # to get the number of rows present in table 
+		query = 'SELECT COUNT(*) FROM master_servers'                 # to get the number of rows present in table
 		rows = self.cursor.execute(query).fetchone()[0]
 		query = 'UPDATE master_servers SET master_id=? WHERE ip=?'
 		self.cursor.execute(query, ("100", add_ip))
@@ -122,7 +131,7 @@ class Storage():
 		except:
 			print "Cache not present"
 
-		query = 'SELECT COUNT(*) FROM master_servers'                 # to get the number of rows present in table 
+		query = 'SELECT COUNT(*) FROM master_servers'                 # to get the number of rows present in table
 		rows = self.cursor.execute(query).fetchone()[0]
 		query = 'SELECT ip from master_servers ORDER BY RANDOM() LIMIT 1'    # to get a random master from the persistence
 		n = random.randint(0,4)
@@ -130,7 +139,7 @@ class Storage():
 		return ip
 
 	def get_ip_from_nodeid(self,nodeid):
-		query = 'SELECT ip FROM peer_servers where server_id = ?'                 # to get the number of rows present in table 
+		query = 'SELECT ip FROM peer_servers where server_id = ?'                 # to get the number of rows present in table
 		rows = self.cursor.execute(query,(int(nodeid),)).fetchone()[0]
 		#print rows
 		return rows
@@ -141,7 +150,7 @@ class Storage():
 		return str(key)
 
 	def get_k_nearest_server(self,filekey):
-		query = 'SELECT server_id,ip FROM peer_servers ORDER BY server_id'              # to get the number of rows present in table 
+		query = 'SELECT server_id,ip FROM peer_servers ORDER BY server_id'              # to get the number of rows present in table
 		rows = self.cursor.execute(query).fetchall()
 		new_list = ""
 		i = 0
@@ -155,7 +164,7 @@ class Storage():
 		if(i>=len(rows)):
 			i -= 1
 
-		return rows[i][1]		
+		return rows[i][1]
 
 		# for more than 1 nearest server
 		'''print rows
@@ -166,7 +175,7 @@ class Storage():
 			new_list = new_list + " " + rows[ind][1]
 			ind -= 1;
 			k -= 1;
-		
+
 		ind = i+1
 		k = 2
 		while(ind<len(rows) and k>0):
