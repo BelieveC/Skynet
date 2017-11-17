@@ -54,13 +54,14 @@ class Storage():
 		#query = 'SELECT COUNT(*) FROM peer_servers'                 # to get the number of rows present in table
 		#rows = self.cursor.execute(query).fetchone()[0]
 		query = 'UPDATE peer_servers SET server_id=? WHERE ip=?'
-		#self.cursor.execute(query, (server_id, add_ip))           # nodeid using hashlib
-		self.cursor.execute(query, (self.nodeids[self.node_ind], add_ip))            # dummy nodeid
+		self.cursor.execute(query, (server_id, add_ip))           # nodeid using hashlib
+		# self.cursor.execute(query, (self.nodeids[self.node_ind], add_ip))            # dummy nodeid
 		#self.start_nodeid += 96
-		self.node_ind += 1
+		# self.node_ind += 1
 		self.conn.commit()
-		return str(self.nodeids[self.node_ind-1])
+		# return str(self.nodeids[self.node_ind-1])
 		#return str(self.start_nodeid - 96)
+		return server_id
 
 	def get_first_server(self,new_ip):
 		query = 'SELECT ip FROM peer_servers'
@@ -120,7 +121,8 @@ class Storage():
 		query = 'SELECT COUNT(*) FROM master_servers'                 # to get the number of rows present in table
 		rows = self.cursor.execute(query).fetchone()[0]
 		query = 'UPDATE master_servers SET master_id=? WHERE ip=?'
-		self.cursor.execute(query, ("100", add_ip))
+		# self.cursor.execute(query, ("100", add_ip))
+		self.cursor.execute(query, (master_id, add_ip))
 		self.conn.commit()
 
 	def get_master(self):

@@ -283,6 +283,9 @@ def client_back_process(self,conn,filekey,step):
 		else:
 			message = self.ip
 			print "only one :",message
+			print "Filekey Babe: ", filekey
+			print "Filekey Babe: ", filekey
+			print "Filekey Babe: ", filekey
 
 		print "sending the collective message : ",message
 		while  True:
@@ -669,7 +672,7 @@ class Server :
 		data = ""
 		print "Forwarding the message for client  to the closest peer "
 		self.soc_conn_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+		print "BUBUBUBUBUBUBUBUBUBBUUBUBU: "+msg_to_send
 		while True :
 			try :
 				print "closest peer for client is : ",closest_peer_ip
@@ -785,7 +788,6 @@ class Server :
 
 def main() :
 	server_obj = Server(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4],sys.argv[5],sys.argv[6])
-
 
 if __name__ == "__main__" :
 	main()

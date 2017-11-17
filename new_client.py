@@ -46,9 +46,10 @@ if args.upload:
     c = Client()
     #c.send_file_to_server(args.upload+"<key>"+'567','172.17.14.23')
     msg = connect_to_persistence("client 2:SERVER2")  #
-   # filekey = hashlib.sha1(args.upload).hexdigest()
+    filekey = hashlib.sha1(args.upload).hexdigest()[:2]
     server = msg[:msg.rfind(':')]
-    filekey = msg[msg.rfind(':')+1:]
+    print "FileKey: "+filekey
+    # filekey = msg[msg.rfind(':')+1:]
     print server," --",filekey
     k_peers = connect_to_persistence("client K-NEAREST:"+filekey)
     k_peers = k_peers.split()

@@ -61,7 +61,8 @@ def start_listening():
 				try:
 					A_server = stor.get_first_server(new_ip)
 					stor.add_new_master(new_ip)     # new server added
-					master_id = hashlib.sha1(new_ip).hexdigest()
+					master_id = hashlib.sha1(new_ip).hexdigest()[:2]
+					print "Master ID: "+master_id
 					stor.add_id_master(new_ip,master_id) #adding id for the master
 					conn.send(master_id +":"+A_server)
 				except:
@@ -85,8 +86,9 @@ def start_listening():
 						status = stor.get_first_server(new_ip)
 					stor.add_new_server(new_ip)     # new server added
 					status = str(status)
-					server_id = hashlib.sha1(new_ip).hexdigest()        # nodeis from the server ip
+					server_id = hashlib.sha1(new_ip).hexdigest()[:2]        # nodeis from the server ip
 					#server_id = str(server_id)
+					print "Server ID: "+server_id
 					server_id = stor.add_id_server(new_ip,server_id) #adding id for the server
 					conn.send(server_id + ":" + status)                     # sending the nodeid to the server
 				except:
@@ -144,7 +146,8 @@ def start_listening():
 			elif msg.find('2:SERVER2') is not -1:
 				try:
 					server_ip = stor.get_server()
-					key = stor.get_filekey()
+					# key = stor.get_filekey()
+					key = "100"
 					conn.send(server_ip+":"+key)
 				except:
 					print 'server allocation failed'
