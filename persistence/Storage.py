@@ -154,38 +154,34 @@ class Storage():
 	def get_k_nearest_server(self,filekey):
 		query = 'SELECT server_id,ip FROM peer_servers ORDER BY server_id'              # to get the number of rows present in table
 		rows = self.cursor.execute(query).fetchall()
-		new_list = ""
+		# new_list = ""
+		# i = 0
+		# #print rows
+		# while(i<len(rows)):
+		# 	if(filekey>rows[i][0]):
+		# 		i += 1
+		# 	else:
+		# 		break
+
+		# if(i>=len(rows)):
+		# 	i -= 1
+
+		# return rows[i][1]
+
+		print "Hello I'm here"
+		k_near = ""
 		i = 0
-		#print rows
-		while(i<len(rows)):
-			if(filekey>rows[i][0]):
-				i += 1
-			else:
-				break
+		k = 3
+		print(len(rows))
+		while(i<len(rows) and i<k):
+			print "Add k_peers"
+			k_near = k_near + rows[i][1] + ","
+			i+=1
 
-		if(i>=len(rows)):
-			i -= 1
-
-		return rows[i][1]
-
-		# for more than 1 nearest server
-		'''print rows
-		print i
-		k = 2
-		ind = i
-		while(ind>=0 and k>0):
-			new_list = new_list + " " + rows[ind][1]
-			ind -= 1;
-			k -= 1;
-
-		ind = i+1
-		k = 2
-		while(ind<len(rows) and k>0):
-			new_list = new_list + " " + rows[ind][1]
-			ind += 1;
-			k -= 1;
-		'''
-		#return new_list
+		print("K near nieghbours are as follows: ")
+		k_near = k_near[:len(k_near)-1]
+		print k_near
+		return k_near
 
 
 	def clean(self):

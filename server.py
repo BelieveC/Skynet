@@ -95,14 +95,14 @@ def client_thread(buff):
 	self = buff[1]
 	used_port = 0
 	file_server = ""
-	
+
 	#infinite loop so that function do not terminate and thread do not end.
 	#here should be added a try catch block - to detect lost connecions or failed connections
 	try :
 		while True:
-			'''here there will be the logic 
+			'''here there will be the logic
 				* to respond to interconnection request from another tier2 server (this will be constant connections)
-				* the other type of connection may be from clients.. this can be search request, 
+				* the other type of connection may be from clients.. this can be search request,
 				* each client will be connected to the client
 				* each upload or download will be done by server initiating a new connection from and to client respectively
 			'''
@@ -170,8 +170,8 @@ def client_thread(buff):
 					update_trie(self, filename_key, master_ip)       # later not to store ip beacuse trie on master will just have the file names
 					#tester(self,"666666")
 
-				print "Updated trie in all masters"					
-	
+				print "Updated trie in all masters"
+
 				while  True:
 					try :
 						#Set the whole string
@@ -184,7 +184,7 @@ def client_thread(buff):
 						count -= 1
 						conn.close()
 						break
-			#elif data[:3] == '10:' :   
+			#elif data[:3] == '10:' :
 			#	print 'Threaded implementation of file upload'
 			#	message = '11:IP_address:10.0.0.4'
 			#	while  True:
@@ -213,7 +213,7 @@ def client_thread(buff):
 				return target_ip
 
 			elif data[:-1] == 'exit':
-				print 'connection closed' 
+				print 'connection closed'
 				conn.close()
 				break
 			#conn.sendall(reply)
@@ -222,7 +222,7 @@ def client_thread(buff):
 	finally :
 		conn.close()
 	#conn.sendall(reply)
-	 
+
 	#came out of loop
 	#conn.close()
 
@@ -237,7 +237,7 @@ def get_masters_from_persistence(message):
 
 	s.connect((host, port))
 	print "connected server to persis to get master"
-	
+
 	s.send(message)
 	print "hey 000"
 
@@ -271,9 +271,9 @@ def client_back_process(self,conn,filekey,step):
 
 				## ------------- find closest_peer's ip using routingtable and leaf set ???---------
 
-				queue = Queue.Queue() 
+				queue = Queue.Queue()
 				thread = threading.Thread(target=self.client_front_process, args=(filekey,closest_peer,queue))
-				thread.start()     
+				thread.start()
 				thread.join()
 				message = queue.get()
 
@@ -301,7 +301,7 @@ def client_back_process(self,conn,filekey,step):
 	except Exception, errtxt:
 		print errtxt
 	#conn.sendall(reply)
-	 
+
 	#came out of loop
 	conn.close()
 
@@ -316,9 +316,9 @@ def peer_back_process(bundle):
 	#here should be added a try catch block - to detect lost connecions or failed connections
 	try :
 		while True:
-			'''here there will be the logic 
+			'''here there will be the logic
 				* to respond to interconnection request from another tier2 server (this will be constant connections)
-				* the other type of connection may be from clients.. this can be search request, 
+				* the other type of connection may be from clients.. this can be search request,
 				* each client will be connected to the client
 				* each upload or download will be done by server initiating a new connection from and to client respectively
 			'''
@@ -331,13 +331,13 @@ def peer_back_process(bundle):
 			print data
 			peer_nodeid = data[data.rfind('>') + 1:data.rfind(':')]
 
-			step = data[data.rfind(':') + 1:]          # step to know which row of 
+			step = data[data.rfind(':') + 1:]          # step to know which row of
 
 			if(step == "-1"):
 				step = self.number_of_matching_digits(peer_nodeid)
 				print "Now step is : ",step
 														 # its routing table to be returned
-			print "^^ ",step 
+			print "^^ ",step
 			step_next = str(int(step) + 1)
 
 			if data.find("REQUEST") is not -1:
@@ -360,7 +360,7 @@ def peer_back_process(bundle):
 
 						print "msg to send :",msg_to_send
 						print "closest peer :",closest_peer
-						## ------------- find closest_peer's ip using routingtable and leaf set ???--------- 
+						## ------------- find closest_peer's ip using routingtable and leaf set ???---------
 
 						queue = Queue.Queue()
 						thread_ = threading.Thread(target=self.peer_front_process, args=(msg_to_send,closest_peer,queue))
@@ -374,7 +374,7 @@ def peer_back_process(bundle):
 				else:
 					print "sending back the leaves"
 
-					
+
 					message = message + "&"
 					for lf in self.leaf:                  # sending leaf set back from the Z node
 						message = message + " " + lf
@@ -389,22 +389,22 @@ def peer_back_process(bundle):
 				#	print ":) :) "
 					#message = message + " ROUTING: ^"
 					for cols in self.routing[int(step)]:
-						message = message + " " + cols	
+						message = message + " " + cols
 
 				message = message +" ^ "+self.nodeid
- 
+
 				if data.find("START") is not -1:               # to check if this is the A peer
 					print "The node was starting node so send neighbours"
 					message = message + "$ "
 					if(len(self.neighbour) > 0):
-						print "getting the neight"	
+						print "getting the neight"
 						for neig in self.neighbour:
 								message = message + " " +  neig
 					message = message + "@"+str(step)
 
 				print "Updating the Routing table with peer having match of : ",step
 				curr_size = len(self.routing)
-				#curr_size = 
+				#curr_size =
 				print "curr size :" ,curr_size," Table is : ",self.routing
 				for i in range(curr_size,int(step)+2):
 					print "pushing the row : ",i
@@ -412,7 +412,7 @@ def peer_back_process(bundle):
 				print "here i m : ",self.routing
 				print "Now : ",char_to_int[peer_nodeid[int(step)]]," ",peer_nodeid[int(step)]," ",int(step)," ",peer_nodeid
 				self.routing[int(step)][char_to_int[peer_nodeid[int(step)]]] = peer_nodeid   # updating the routing table of cuurent node with the joining peer id
-				
+
 				print "Updating leaf set with peer having match of : ",step
 				bisect.insort(self.leaf,peer_nodeid)
 				if(self.nodeid > peer_nodeid):
@@ -443,7 +443,7 @@ def peer_back_process(bundle):
 		print errtxt
 		conn.close()
 	#conn.sendall(reply)
-	 
+
 	#came out of loop
 	#conn.close()
 
@@ -486,7 +486,7 @@ class Server :
 		# 		else :
 		# 			self.ip = ni.ifaddresses('eth0')[2][0]['addr']
 		# 		if self.ip == "" :
-		# 			continue				
+		# 			continue
 		# 	except :
 		# 		self.ip = ni.ifaddresses('eth0')[2][0]['addr']
 		# 	finally :
@@ -510,7 +510,7 @@ class Server :
 		#self.routing.append(temp)
 		#self.routing.append(temp)
 		#self.routing.append(temp)
-	#	print self.check_information("3496fe",3) 
+	#	print self.check_information("3496fe",3)
 
 		#print "getting list of masters :"
 		#masters_list = get_masters_from_persistence("server 2:LIST_OF_MASTERS")
@@ -520,11 +520,11 @@ class Server :
 		self.register_to_persistence()
 		#get_masters_from_persistence("server 2:LIST_OF_MASTERS")
 
-		
+
 
 		if self.A_server is "0" :                         # decide this condition of master selection later
 			print "I am the first peer in the network"
-		else:	
+		else:
 			try:
 				queue = Queue.Queue()
 				thread_ = threading.Thread(target=self.peer_front_process, args=("REQUEST START<id>" +self.nodeid + ":-1",self.A_server,queue))
@@ -563,14 +563,14 @@ class Server :
 					node = x[x.rfind('^')+1:].strip()
 					nodes_on_path.append(node)
 					entries = row.split()
-					for j in range(0,20):	
+					for j in range(0,20):
 						self.routing[step][j] = entries[j]        # debugging1
 					#self.routing.append(entries)
 					#print "hey ",i+1
 					#print node, " ",row," ",entries
-				
+
 				print "Routing table : "
-				print self.routing		
+				print self.routing
 
 				print "Updating the leaf set :"
 				for node in nodes_on_path:
@@ -586,11 +586,11 @@ class Server :
 
 			except Exception, errtxt:
 				print errtxt
-		
+
 		self.bind_and_serve()                 # communication with peers and clients after server creation
-		
+
 		print 'Super Outside'
-		
+
 
 	def number_of_matching_digits(self,peer_nodeid):
 		i = 0;
@@ -600,19 +600,22 @@ class Server :
 			if(self.nodeid[i]!=peer_nodeid[i]):
 				break
 			i += 1
-		return str(i)	
+		return str(i)
 
 	def check_information(self,peer_nodeid,step):
 		l = len(self.leaf)
+		print "Length of leaf set "+str(l)
+		print self.leaf
 		if(l==1):
 			return self.leaf[0]
 
-		if(l>1 and peer_nodeid>=self.leaf[0] and peer_nodeid<=self.leaf[l-1]):	
+		if(l>1 and peer_nodeid>=self.leaf[0] and peer_nodeid<=self.leaf[l-1]):
 			return min(self.leaf, key=lambda v: len(set(peer_nodeid) ^ set(v)))
 			#return difflib.get_close_matches(peer_nodeid, self.leaf,1)
 
 
 		print char_to_int[peer_nodeid[int(step)]]
+		print self.routing
 		if(len(self.routing) > step):
 			return self.routing[int(step)][char_to_int[peer_nodeid[int(step)]]]              # sending the entry from routing table
 		return "NULL"
@@ -620,7 +623,7 @@ class Server :
 
 	def register_to_persistence(self):
 		s = socket.socket()             # Create a socket object
-		
+
 		host = persist_ip
 		port = persist_port                # Reserve a port for your service.
 
@@ -659,7 +662,7 @@ class Server :
 			try :
 				self.soc_conn_peer.sendall(msg_to_send)
 			except socket.error:
-				print 'Send failed server' 
+				print 'Send failed server'
 				continue
 			finally :
 				break
@@ -688,7 +691,7 @@ class Server :
 			try :
 				self.soc_conn_client.sendall(msg_to_send)
 			except socket.error:
-				print 'Send failed client' 
+				print 'Send failed client'
 				continue
 			finally :
 				break
@@ -719,8 +722,8 @@ class Server :
 		while True:
 			conn, addr = self.socket_obj['port_for_back'].accept()
 			print 'Connected @ peer ... with ' + addr[0] + ':' + str(addr[1])
-			
-			bundle = [conn, self, addr[0]]			
+
+			bundle = [conn, self, addr[0]]
 			#start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
 			start_new_thread(peer_back_process ,(bundle,))
 
@@ -746,8 +749,8 @@ class Server :
 		while True:
 			conn, addr = self.socket_obj['client_port_for_back'].accept()
 			print 'Connected @ peer for client-query ... with ' + addr[0] + ':' + str(addr[1])
-			
-			bundle = [conn, self, addr[0]]			
+
+			bundle = [conn, self, addr[0]]
 			#start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
 			start_new_thread(client_back_process ,(bundle,))
 
@@ -780,7 +783,7 @@ class Server :
 		while True:
 			conn, addr = self.socket_obj['s'].accept()
 			print 'Connected with ' + addr[0] + ':' + str(addr[1])
-			 
+
 			#start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
 			buff = [conn, self]
 			start_new_thread(client_thread ,(buff,))       # separate thread for each client

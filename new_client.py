@@ -52,8 +52,12 @@ if args.upload:
     # filekey = msg[msg.rfind(':')+1:]
     print server," --",filekey
     k_peers = connect_to_persistence("client K-NEAREST:"+filekey)
-    k_peers = k_peers.split()
+    print k_peers
+    k_peers = k_peers.split(",")
+    i=0
     for peer in k_peers:
+        print "Peer #",i
+        i+=1
         print "sending file to peer : ",peer
         c.send_file_to_server(args.upload+"<key>"+filekey,peer)    # uploading the file in k nearest neighbours
 
