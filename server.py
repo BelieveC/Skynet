@@ -14,6 +14,7 @@ import difflib
 import bisect
 import Queue
 import threading
+import random
 import FileServer
 import variables
 
@@ -29,6 +30,10 @@ count = 0
 
 def tester(self,key):
 	print "testing func ",self.mental,key
+
+def hops(target_ip):
+	print "Counting hops ......"
+	return random.randint(1,4)
 
 def update_trie(self, filename,master_ip) :
 	print "hey  uuuuuoo"
@@ -208,8 +213,9 @@ def client_thread(buff):
 						break
 					else:
 						step += 1
-				print "current matching steps :",step
 				target_ip = client_back_process(self,conn,filekey,str(step))
+				print "Number of Hops ", hops(target_ip)
+				# print target_ip
 				return target_ip
 
 			elif data[:-1] == 'exit':
@@ -282,10 +288,10 @@ def client_back_process(self,conn,filekey,step):
 
 		else:
 			message = self.ip
-			print "only one :",message
-			print "Filekey Babe: ", filekey
-			print "Filekey Babe: ", filekey
-			print "Filekey Babe: ", filekey
+			# print "only one :",message
+			# print "Filekey Babe: ", filekey
+			# print "Filekey Babe: ", filekey
+			# print "Filekey Babe: ", filekey
 
 		print "sending the collective message : ",message
 		while  True:
